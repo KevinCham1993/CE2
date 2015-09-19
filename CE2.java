@@ -20,7 +20,7 @@ public class CE2 {
 
 	private static final String COMMAND = "command: ";
 
-	private static final String TEXT_INVALID = "please enter a valid index";
+	private static final String TEXT_INVALID = "please enter a valid command or index";
 
 	private static final String TEXT_ADD = "added to %1$s: \"%2$s\"";
 
@@ -29,6 +29,10 @@ public class CE2 {
 	private static final String TEXT_DELETE = "deleted from %1$s: \"%2$s\"";
 
 	private static final String TEXT_CLEAR = "all content deleted from %1$s";
+
+	private static final String TEXT_SORT = "All sorted alphabetically: ";
+
+	private static final String TEXT_NOT_FOUND = "result not found";
 
 	// store all texts from the user
 	private static ArrayList<String> textFile; // An arraylist to store the
@@ -39,8 +43,8 @@ public class CE2 {
 	private static String fileName;
 	private static String command;
 
-	enum COMMAND_TYPE {
-		ADD, DISPLAY, DELETE, CLEAR, EXIT, INVALID, SORT, SEARCH
+	enum Command_Type {
+		ADD, DISPLAY, DELETE, CLEAR, SORT, SEARCH, EXIT, INVALID
 	};
 
 	public static void main(String[] args) throws IOException {
@@ -84,7 +88,7 @@ public class CE2 {
 
 	// This method is use to save the command that the user enter
 	private static void operate(String command) throws IOException {
-		COMMAND_TYPE commandType = determineCommandType(getFirstWord(command));
+		Command_Type commandType = determineCommandType(getFirstWord(command));
 		String content = removeFirstWord(command);
 
 		switch (commandType) {
@@ -100,15 +104,15 @@ public class CE2 {
 		case CLEAR:
 			clear();
 			return;
-		case EXIT:
-			saveToFile();
-			System.exit(0);
 		case SORT:
 			sort();
 			return;
 		case SEARCH:
 			search(content);
 			return;
+		case EXIT:
+			saveToFile();
+			System.exit(0);
 		case INVALID:
 			// if the user any command that cannot be identified (e.g
 			// "jump")
@@ -117,25 +121,25 @@ public class CE2 {
 		}
 	}
 
-	private static COMMAND_TYPE determineCommandType(String firstWord) {
+	private static Command_Type determineCommandType(String firstWord) {
 		if (firstWord == null)
 			throw new Error("command type string cannot be null!");
 		if (firstWord.equalsIgnoreCase("add")) {
-			return COMMAND_TYPE.ADD;
+			return Command_Type.ADD;
 		} else if (firstWord.equalsIgnoreCase("display")) {
-			return COMMAND_TYPE.DISPLAY;
+			return Command_Type.DISPLAY;
 		} else if (firstWord.equalsIgnoreCase("delete")) {
-			return COMMAND_TYPE.DELETE;
+			return Command_Type.DELETE;
 		} else if (firstWord.equalsIgnoreCase("clear")) {
-			return COMMAND_TYPE.CLEAR;
+			return Command_Type.CLEAR;
 		} else if (firstWord.equalsIgnoreCase("sort")) {
-			return COMMAND_TYPE.SORT;
+			return Command_Type.SORT;
 		} else if (firstWord.equalsIgnoreCase("search")) {
-			return COMMAND_TYPE.SEARCH;
+			return Command_Type.SEARCH;
 		} else if (firstWord.equalsIgnoreCase("exit")) {
-			return COMMAND_TYPE.EXIT;
+			return Command_Type.EXIT;
 		} else {
-			return COMMAND_TYPE.INVALID;
+			return Command_Type.INVALID;
 		}
 	}
 
@@ -218,13 +222,24 @@ public class CE2 {
 
 	private static void sort() {
 		Collections.sort(textFile);
+		showMessage(TEXT_SORT);
 		display();
 		return;
 	}
 
 	private static void search(String content) {
-		// TODO Auto-generated method stub
-
+		String finding = "";
+		int size = textFile.size();
+		if (size == 0) {
+			finding = TEXT_NOT_FOUND;
+		} else {
+			for (int i = 0; i < size; i++) {
+				if (textFile.get(i).contains(content)) {
+					finding += (i + 1) + ". " + textFile.get(i) + "\n";
+				}
+			}
+		}
+		return;
 	}
 
 	// This method is to store all the text into the arraylist into the text
