@@ -116,7 +116,7 @@ public class CE2 {
 		case INVALID:
 			// if the user any command that cannot be identified (e.g
 			// "jump")
-			showMessage(TEXT_INVALID, "Please enter a valid command");
+			showMessage(TEXT_INVALID);
 			return;
 		}
 	}
